@@ -5,16 +5,26 @@ require(ggplot2)
 require(ggmap)
 require(dbscan)
 require(geosphere)
+require(dplyr)
+require(flexclust)
 options(stringsAsFactors = FALSE)
-GeoData = read.socrata(url = "https://opendata.socrata.com/resource/txu4-fsic.csv?$select=longitude,latitude")
+#GeoData = read.socrata(url = "https://opendata.socrata.com/resource/txu4-fsic.csv?$select=longitude,latitude") Test Dataset
+GeoData = read.csv(file = "fibreloc.csv", header = TRUE)
+SampleGeo = sample_n(GeoData, 200000)
 CairoWin()
-MapBackground = get_map(location = c(-98.35,39.5), zoom = 5, scale = 4, maptype = "roadmap", source =  "google")
-GeoClust = dbscan(GeoData, eps = 0.3, minPts = 4)
-GeoData$Cluster = matrix(unlist(GeoClust$cluster), ncol = 1, byrow = TRUE)
+MapBackground = get_map(location = c(172.639,-43.525), zoom = 7, scale = "auto", maptype = "roadmap", source =  "google")
+#GeoClust = dbscan(GeoData, eps = 0.3, minPts = 4)
+#GeoData$Cluster = matrix(unlist(GeoClust$cluster), ncol = 1, byrow = TRUE)
 View(GeoData)
-ggmap(MapBackground) + geom_point(data = GeoData, aes(x = Longitude, y = Latitude, colour = Cluster), size = 0.01) +scale_colour_gradientn(colours = rainbow(40))
-# kNNdistplot() Figure out a better way to plot this so we can line up the values and actually get a readable result
+ggmap(MapBackground)
+ggmap(MapBackground) + geom_point(data = GeoData, aes(x = GPS_X, y = GPS_Y, colour = Status), size = 0.01)
+#ggmap(MapBackground) + geom_point(data = GeoData, aes(x = Longitude, y = Latitude, colour = Cluster), size = 0.01) +scale_colour_gradientn(colours = rainbow(40))
 tempsubset = subset(GeoData, GeoData$Cluster > 0, select=c(Longitude, Latitude, Cluster)) # Subset to remove unclustered points
 0 %in% tempsubset$Cluster # Neat way to check if an element exists in a list obvs dont need to do this due to previous line but it's here as a note
 ggmap(MapBackground) + geom_point(data = tempsubset, aes(x = Longitude, y = Latitude, colour = Cluster), size = 0.001) +scale_colour_gradientn(colours = rainbow(40)) # Plot without unclustered points
 dist.matrix = distm(GeoData, fun = distHaversine)
+
+GeoSubset = subset(GeoData, select = c(GPS_X,GPS_Y))
+# ClusterSet = kcca(GeoSubset, 15,dist = "distHaversine")
+ClusterSet2 = kmeans(x = GeoSubset, centers = 15)
+GeoSubset$Cluster = ClusterSet2$cluster
