@@ -19,3 +19,5 @@ Geo.Dist = function(df){
   DistanceMatrix = do.call(cbind,lapply(1:nrow(df), d, df))
   return(DistanceMatrix)
 }
+
+Cluster = kmeans(x = Geo.Dist(GeoData[,3:4]), centres = 15)
