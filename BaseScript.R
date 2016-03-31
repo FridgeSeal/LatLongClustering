@@ -3,12 +3,10 @@ require(RSocrata) # For pulling the data straight off OpenData
 require(Cairo)
 require(ggplot2)
 require(ggmap)
-require(dbscan)
 require(geosphere)
 require(dplyr)
-require(flexclust)
+
 options(stringsAsFactors = FALSE)
-#GeoData = read.socrata(url = "https://opendata.socrata.com/resource/txu4-fsic.csv?$select=longitude,latitude") Test Dataset
 GeoData = read.csv(file = "fibreloc.csv", header = TRUE)
 SampleGeo = sample_n(GeoData, 200000)
 CairoWin()
