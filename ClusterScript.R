@@ -10,7 +10,7 @@ options(stringsAsFactors = FALSE)
 
 GeoData = read.csv(file = "fibreloc.csv", header = TRUE)
 GeoCentres = read.csv(file = "ClusterCentres.csv", header = TRUE)
-MapBackground = get_map(location = c(172.639,-43.525), zoom = 7, scale = "auto", maptype = "roadmap", source =  "google")
+MapBackground = get_map(location = c(174.7633,-36.8485), zoom = 5, scale = "auto", maptype = "roadmap", source =  "google")
 BlankList = vector(mode = "numeric",15)
 GetClosest = function(templist, baseset, tempvector, a, b){ #a = 3,4 b = 2, 3
   for(i in 1:15){
@@ -21,15 +21,4 @@ GetClosest = function(templist, baseset, tempvector, a, b){ #a = 3,4 b = 2, 3
 
 NewCentres = as.matrix(data.frame(GetClosest(BlankList, GeoData, GeoCentres, 3, 2), GetClosest(BlankList, GeoData, GeoCentres, 4, 3)))
 colnames(NewCentres) = c("Longitude", "Latitude")
-
-# Geo.Dist = function(df){
-#   d <- function(i, LatLongVector){
-#     distance <- rep(0, nrow(LatLongVector))
-#     distance[i:nrow(LatLongVector)] <- distHaversine(LatLongVector[i:nrow(LatLongVector), 1:2], LatLongVector[i,1:2])
-#     return(distance)
-#   }
-#   DistanceMatrix = do.call(cbind,lapply(1:nrow(df), d, df))
-#   return(DistanceMatrix)
-# }
-
-Cluster = kmeans(x = Geo.Dist(GeoData[,3:4]), centres = 15)
+Cluster = kmeans(x = as.matrix(GeoData[,3:4]), centers = NewCentres)
