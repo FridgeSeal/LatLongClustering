@@ -9,8 +9,8 @@ require(DescTools)
 
 options(stringsAsFactors = FALSE)
 
-GeoData = fread(input = "fibreloc.csv", header = TRUE)
-GeoCentres = read.csv(file = "ClusterCentres.csv", header = TRUE)
+GeoData = fread(input = "fibreloc.csv", header = TRUE, sep = ",")
+GeoCentres = fread(input = "ClusterCentres.csv", header = TRUE, sep = ",")
 MapBackground = get_map(location = c(174.7633,-36.8485), zoom = 5, scale = "auto", maptype = "roadmap", source =  "google")
 BlankList = vector(mode = "numeric",15)
 GetClosest = function(templist, baseset, tempvector, a, b){ #a = 3,4 b = 2, 3
