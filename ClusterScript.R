@@ -1,4 +1,5 @@
 # Basic R script to cluster/group some lat-longs about some predefined point and radius
+require(data.table)
 require(Cairo)
 require(ggplot2)
 require(ggmap)
@@ -8,7 +9,7 @@ require(DescTools)
 
 options(stringsAsFactors = FALSE)
 
-GeoData = read.csv(file = "fibreloc.csv", header = TRUE)
+GeoData = fread(input = "fibreloc.csv", header = TRUE)
 GeoCentres = read.csv(file = "ClusterCentres.csv", header = TRUE)
 MapBackground = get_map(location = c(174.7633,-36.8485), zoom = 5, scale = "auto", maptype = "roadmap", source =  "google")
 BlankList = vector(mode = "numeric",15)
